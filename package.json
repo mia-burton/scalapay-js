@@ -1,0 +1,28 @@
+{
+  "name": "scalapay-node",
+  "version": "0.0.1",
+  "description": "A Node.js sk for Scalapay",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mia-burton/scalapay-node.git"
+  },
+  "keywords": [
+    "scalapay"
+  ],
+  "author": "Mia Burton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mia-burton/scalapay-node/issues"
+  },
+  "homepage": "https://github.com/mia-burton/scalapay-node#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.0.1",
+    "typescript": "^3.9.6"
+  }
+}
