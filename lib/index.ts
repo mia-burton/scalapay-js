@@ -1,3 +1,3 @@
-export function hello(): string {
-  return 'Hello'
-}
+import { ScalaClient } from './scala-client'
+
+export default ScalaClient
