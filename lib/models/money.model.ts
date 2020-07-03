@@ -1,13 +1,13 @@
 export class Money {
-  private readonly amount: number
+  private readonly amount: string
   private readonly currency: string
 
-  constructor(amount: number, currency: string = 'EUR') {
+  constructor(amount: string, currency: string = 'EUR') {
     this.amount = amount
     this.currency = currency
   }
 
-  public getAmount(): number {
+  public getAmount(): string {
     return this.amount
   }
 

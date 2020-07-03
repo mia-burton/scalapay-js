@@ -19,12 +19,12 @@ export class OrderDetail
   private taxAmount!: Money;
   private shippingAmount!: Money;
   // Unique order reference from the merchant platform
-  private readonly reference: string;
+  private readonly merchantReference: string;
 
   constructor(consumer: Consumer, total: Money, reference: string) {
     this.consumer = consumer
     this.totalAmount = total
-    this.reference = reference
+    this.merchantReference = reference
   }
 
   public setBilling(contact: Contact): OrderDetail {
@@ -90,6 +90,6 @@ export class OrderDetail
   }
 
   public getReference(): string {
-    return this.reference
+    return this.merchantReference
   }
 }

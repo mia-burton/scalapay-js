@@ -5,6 +5,8 @@ import { OrderToken } from "./models/order-token.model"
 import { OrderRefund } from "./models/order-refund.model"
 import { RefundResponse } from "./models/refund-response.model"
 import { Money } from "./models/money.model"
+import { Configuration } from "./models/configuration.model"
+import { CaptureOrderError, ConfigurationError, CreateOrderError, RefundError } from "./errors"
 
 export class ScalaClient implements ClientInterface {
   private readonly PRODUCTION_URI = 'https://portal.scalapay.com/v2/'
@@ -17,7 +19,7 @@ export class ScalaClient implements ClientInterface {
   private readonly sandbox: boolean
   private restClient: AxiosInstance
 
-  constructor(apiKey: string, redirectConfirmUrl: string, redirectCancelUrl: string, expireIn: number = 6000000, sandbox: boolean = false) {
+  constructor(apiKey: string, redirectConfirmUrl: string, redirectCancelUrl: string, sandbox: boolean = false, expireIn: number = 6000000) {
     this.apiKey = apiKey
     this.redirectCancelUrl = redirectCancelUrl
     this.redirectConfirmUrl = redirectConfirmUrl
@@ -26,14 +28,30 @@ export class ScalaClient implements ClientInterface {
     this.restClient = this.initAxios()
   }
 
+  public async configuration(): Promise<Configuration> {
+    try {
+      const res = await this.restClient.get('configurations')
+      const conf = new Configuration(
+        new Money(
+          res.data.minimumAmount.amount,
+          res.data.minimumAmount.currency,
+        ),
+        new Money(
+          res.data.maximumAmount.amount,
+          res.data.maximumAmount.currency,
+        ),
+        parseInt(res.data.numberOfPayments)
+      )
+      return conf
+    } catch (err) {
+      throw new ConfigurationError(err.message)
+    }
+  }
+
   public async createOrder(orderDetails: OrderDetail): Promise<OrderToken> {
     try {
       const body = {
         ...orderDetails,
-        merchant: {
-          redirectConfirmUrl: this.redirectConfirmUrl,
-          redirectCancelUrl: this.redirectCancelUrl
-        },
         orderExpiryMilliseconds: this.expireIn
       }
       const res = await this.restClient.post('orders', body)
@@ -46,7 +64,7 @@ export class ScalaClient implements ClientInterface {
       }
       return token
     } catch(err) {
-      throw new Error('Error')
+      throw new CreateOrderError(err.message, err.response.data)
     }
   }
 
@@ -59,7 +77,7 @@ export class ScalaClient implements ClientInterface {
       const res = await this.restClient.post('payments/capture', body)
       return res.data.status
     } catch(err) {
-      throw new Error('Error')
+      throw new CaptureOrderError(err.message, err.response.data)
     }
   }
 
@@ -80,7 +98,7 @@ export class ScalaClient implements ClientInterface {
       )
       return refundRes
     } catch(err) {
-      throw new Error('Error')
+      throw new RefundError(err.message, err.response.data)
     }
   }
 
