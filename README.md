@@ -21,9 +21,7 @@ client.capture(token)
 //Refund
 client.refund(token ,refund)
 ```
-```sh
-Output should be 'Boys'
-```
+
 ### TypeScript
 ```typescript
 import { ScalaClient } from '@miaburton/scalapay-node'
