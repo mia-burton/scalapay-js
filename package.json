@@ -1,6 +1,6 @@
 {
   "name": "@mia-burton/scalapay-node",
-  "version": "0.1.2",
+  "version": "0.2.1",
   "description": "A Node.js module for Scalapay",
   "main": "dist/index.js",
   "scripts": {
