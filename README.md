@@ -1,19 +1,19 @@
 # scalapay-node
 A Node.js module for scalapay api
-## Installation 
+## Installation
 ```sh
-npm install @miaburton/scalapay-node --save
-yarn add @miaburton/scalapay-node
+npm install @mia-burton/scalapay-node --save
+yarn add @mia-burton/scalapay-node
 ```
 
 ## Usage
 ### Javascript
 ```javascript
-var scalaClient = require('@miaburton/scalapay-node')
+var scalaClient = require('@mia-burton/scalapay-node')
 var client = new scalaClient(API_KEY, CONFIRM_URL, FAILURE_URL)
 
 //Create order
-client.createOrder(orderDetal)
+client.createOrder(orderDetail)
 
 //Capture payment
 client.capture(token)
@@ -24,12 +24,12 @@ client.refund(token ,refund)
 
 ### TypeScript
 ```typescript
-import { ScalaClient } from '@miaburton/scalapay-node'
+import { ScalaClient } from '@mia-burton/scalapay-node'
 
 const client = new ScalaClient(API_KEY, CONFIRM_URL, FAILURE_URL)
 
 //Create order
-client.createOrder(orderDetal)
+client.createOrder(orderDetail)
 
 //Capture payment
 client.capture(token)

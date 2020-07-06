@@ -1,10 +1,7 @@
-import ScalaClient from '../lib'
+import ScalaClient, { OrderDetail, Consumer, Money } from '../lib'
 
 import * as chai from 'chai';
 import * as nock from 'nock'
-import { OrderDetail } from '../lib/models/order-detail.model';
-import { Consumer } from '../lib/models/consumer.model';
-import { Money } from '../lib/models/money.model';
 import { expect } from 'chai';
 
 describe('Scalapay client', () => {
