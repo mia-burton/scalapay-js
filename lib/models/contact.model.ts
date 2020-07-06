@@ -13,6 +13,15 @@ export class Contact
   private readonly countryCode: string
   private phoneNumber!: string
 
+  /**
+   * Cosumern contact
+   *
+   * @param name string
+   * @param line1  string
+   * @param suburb  string
+   * @param postcode  string
+   * @param countryCode  string
+   */
   constructor(name: string, line1: string, suburb: string, postcode: string, countryCode: string) {
     this.name = name
     this.line1 = line1

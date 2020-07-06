@@ -7,6 +7,14 @@ export class RefundResponse {
   private refundToken: string
   private refundedAt: string
 
+  /**
+   * Refund response object
+   * @param token string - Order token
+   * @param amount  string - Amount refound
+   * @param reference string - Unique order reference from the merchant platform
+   * @param refundToken string - Refund token
+   * @param refundedAt string - Refund date
+   */
   constructor(token: string, amount: Money, reference: string, refundToken: string, refundedAt: string) {
     this.token = token
     this.amount = amount

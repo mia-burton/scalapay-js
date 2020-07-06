@@ -9,8 +9,15 @@ export class Consumer
   private readonly email: string
   private phoneNumber!: string
 
-  constructor(names: string, surname: string, email: string) {
-    this.givenNames = names
+  /**
+   * Consumer object
+   *
+   * @param name string - Name of consumer
+   * @param surname string - Last name of consumer
+   * @param email string - Email of consumer
+   */
+  constructor(name: string, surname: string, email: string) {
+    this.givenNames = name
     this.email = email
     this.surname = surname
   }
