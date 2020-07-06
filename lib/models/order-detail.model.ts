@@ -18,9 +18,14 @@ export class OrderDetail
   private readonly totalAmount: Money
   private taxAmount!: Money;
   private shippingAmount!: Money;
-  // Unique order reference from the merchant platform
   private readonly merchantReference: string;
 
+  /**
+   * The order detail to pass at scalpay
+   * @param consumer Consumer - The consumer data
+   * @param total Money - The amount to pay
+   * @param reference string - Unique order reference from the merchant platform
+   */
   constructor(consumer: Consumer, total: Money, reference: string) {
     this.consumer = consumer
     this.totalAmount = total

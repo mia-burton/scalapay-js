@@ -4,6 +4,12 @@ export class OrderRefund {
   private amount: Money
   private reference: string
 
+  /**
+   * OrderRefund object
+   *
+   * @param refundAmount Money - Amount to refund
+   * @param reference string - Unique order reference from the merchant platform
+   */
   constructor(refundAmount: Money, reference: string )
   {
     this.amount = refundAmount

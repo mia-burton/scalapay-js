@@ -3,6 +3,11 @@ export class OrderToken {
   private expires!: Date
   private checkoutUrl!: string
 
+  /**
+   * Order token object
+   *
+   * @param token string - The token
+   */
   constructor(token: string) {
     this.token = token
   }
