@@ -1,5 +1,5 @@
 {
-  "name": "@mia-burton/scalapay-node",
+  "name": "@mia-burton/scalapay-js",
   "version": "0.2.1",
   "description": "A Node.js module for Scalapay",
   "main": "dist/index.js",
