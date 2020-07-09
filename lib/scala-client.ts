@@ -71,7 +71,11 @@ export class ScalaClient implements ClientInterface {
     try {
       const body = {
         ...orderDetail,
-        orderExpiryMilliseconds: this.expireIn
+        orderExpiryMilliseconds: this.expireIn,
+        merchant: {
+          redirectConfirmUrl: this.redirectConfirmUrl,
+          redirectCancelUrl: this.redirectCancelUrl
+        }
       }
       const res = await this.restClient.post('orders', body)
       const token = new OrderToken(res.data.token)
