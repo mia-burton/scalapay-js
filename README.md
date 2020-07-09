@@ -1,15 +1,15 @@
-# scalapay-node
+# scalapay-js
 A Node.js module for scalapay api
 ## Installation
 ```sh
-npm install @mia-burton/scalapay-node --save
-yarn add @mia-burton/scalapay-node
+npm install @mia-burton/scalapay-js --save
+yarn add @mia-burton/scalapay-js
 ```
 
 ## Usage
 ### Javascript
 ```javascript
-var scalaClient = require('@mia-burton/scalapay-node')
+var scalaClient = require('@mia-burton/scalapay-js')
 var client = new scalaClient(API_KEY, CONFIRM_URL, FAILURE_URL)
 
 //Create order
@@ -24,7 +24,7 @@ client.refund(token ,refund)
 
 ### TypeScript
 ```typescript
-import { ScalaClient } from '@mia-burton/scalapay-node'
+import { ScalaClient } from '@mia-burton/scalapay-js'
 
 const client = new ScalaClient(API_KEY, CONFIRM_URL, FAILURE_URL)
 
@@ -40,7 +40,7 @@ client.refund(token ,refund)
 ## Enable sandbox env
 On inizialization set `sandbox` parameter to true
 
-## Test 
+## Test
 ```sh
 npm run test
 ```
