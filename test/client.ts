@@ -40,7 +40,7 @@ describe('Scalapay client', () => {
       });
   });
 
-  const client = new ScalaClient('qhtfs87hjnc12kkos', 'https://staging.portal.scalapay.com/success-url', 'https://staging.portal.scalapay.com/failur-url', true)
+  const client = new ScalaClient('qhtfs87hjnc12kkos', true)
   let token = ''
 
   it('should return configurations' , async () => {
@@ -62,7 +62,7 @@ describe('Scalapay client', () => {
       ),
       'AAA'
     )
-    const tokenResponse = await client.createOrder(order)
+    const tokenResponse = await client.createOrder(order, 'https://staging.portal.scalapay.com/success-url', 'https://staging.portal.scalapay.com/failur-url')
     expect(tokenResponse).to.be.an('object').that.have.property('token').that.is.a('string')
     expect(tokenResponse).to.be.an('object').that.have.property('expires').that.is.a('string')
     expect(tokenResponse).to.be.an('object').that.have.property('checkoutUrl').that.is.a('string')

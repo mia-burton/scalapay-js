@@ -13,8 +13,6 @@ export class ScalaClient implements ClientInterface {
   private readonly SANDBOX_URI = 'https://staging.api.scalapay.com/v2/'
 
   private readonly apiKey: string
-  private readonly redirectConfirmUrl: string
-  private readonly redirectCancelUrl: string
   private readonly expireIn: number
   private readonly sandbox: boolean
   private restClient: AxiosInstance
@@ -27,10 +25,8 @@ export class ScalaClient implements ClientInterface {
    * @param sandbox boolean - Enable sandbox env
    * @param expireIn number - Number of seconds in wich complete payment
    */
-  constructor(apiKey: string, redirectConfirmUrl: string, redirectCancelUrl: string, sandbox: boolean = false, expireIn: number = 6000000) {
+  constructor(apiKey: string, sandbox: boolean = false, expireIn: number = 6000000) {
     this.apiKey = apiKey
-    this.redirectCancelUrl = redirectCancelUrl
-    this.redirectConfirmUrl = redirectConfirmUrl
     this.expireIn = expireIn
     this.sandbox = sandbox
     this.restClient = this.initAxios()
@@ -67,14 +63,14 @@ export class ScalaClient implements ClientInterface {
    * @param orderDetail- OrderDetail object
    * @returns Promise<OrderToken>
    */
-  public async createOrder(orderDetail: OrderDetail): Promise<OrderToken> {
+  public async createOrder(orderDetail: OrderDetail, confirmUrl: string, cancelUrl: string): Promise<OrderToken> {
     try {
       const body = {
         ...orderDetail,
         orderExpiryMilliseconds: this.expireIn,
         merchant: {
-          redirectConfirmUrl: this.redirectConfirmUrl,
-          redirectCancelUrl: this.redirectCancelUrl
+          redirectConfirmUrl: confirmUrl,
+          redirectCancelUrl: cancelUrl
         }
       }
       const res = await this.restClient.post('orders', body)
