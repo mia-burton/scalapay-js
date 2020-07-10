@@ -6,7 +6,7 @@ import { Configuration } from "./models/configuration.model";
 
 export interface ClientInterface {
   configuration(): Promise<Configuration>
-  createOrder(orderDetails: OrderDetail): Promise<OrderToken>
+  createOrder(orderDetails: OrderDetail, confirmUrl: string, cancelUrl: string): Promise<OrderToken>
   capture(token: string, reference?: string): Promise<string>
   refund(token: string, refound: OrderRefund): Promise<RefundResponse>
 }

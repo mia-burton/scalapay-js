@@ -10,10 +10,10 @@ yarn add @mia-burton/scalapay-js
 ### Javascript
 ```javascript
 var scalaClient = require('@mia-burton/scalapay-js')
-var client = new scalaClient(API_KEY, CONFIRM_URL, FAILURE_URL)
+var client = new scalaClient(API_KEY)
 
 //Create order
-client.createOrder(orderDetail)
+client.createOrder(orderDetail, 'your-confirmation-url', 'your-cancel-url')
 
 //Capture payment
 client.capture(token)
@@ -26,10 +26,10 @@ client.refund(token ,refund)
 ```typescript
 import { ScalaClient } from '@mia-burton/scalapay-js'
 
-const client = new ScalaClient(API_KEY, CONFIRM_URL, FAILURE_URL)
+const client = new ScalaClient(API_KEY)
 
 //Create order
-client.createOrder(orderDetail)
+client.createOrder(orderDetail, 'your-confirmation-url', 'your-cancel-url')
 
 //Capture payment
 client.capture(token)
