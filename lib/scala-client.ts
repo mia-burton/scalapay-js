@@ -9,8 +9,8 @@ import { Configuration } from "./models/configuration.model"
 import { CaptureOrderError, ConfigurationError, CreateOrderError, RefundError } from "./errors"
 
 export class ScalaClient implements ClientInterface {
-  private readonly PRODUCTION_URI = 'https://portal.scalapay.com/v2/'
-  private readonly SANDBOX_URI = 'https://staging.api.scalapay.com/v2/'
+  private readonly PRODUCTION_URI = 'https://api.scalapay.com/v2/'
+  private readonly SANDBOX_URI = 'https://integration.api.scalapay.com/v2/'
 
   private readonly apiKey: string
   private readonly expireIn: number
