@@ -20,3 +20,5 @@ var order_token_model_1 = require("./order-token.model");
 Object.defineProperty(exports, "OrderToken", { enumerable: true, get: function () { return order_token_model_1.OrderToken; } });
 var refund_response_model_1 = require("./refund-response.model");
 Object.defineProperty(exports, "RefundResponse", { enumerable: true, get: function () { return refund_response_model_1.RefundResponse; } });
+var order_detail_response_model_1 = require("./order-detail-response.model");
+Object.defineProperty(exports, "OrderDetailResponse", { enumerable: true, get: function () { return order_detail_response_model_1.OrderDetailResponse; } });
