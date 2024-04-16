@@ -11,10 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScalaClient = void 0;
 const axios_1 = require("axios");
-const order_token_model_1 = require("./models/order-token.model");
-const refund_response_model_1 = require("./models/refund-response.model");
-const money_model_1 = require("./models/money.model");
-const configuration_model_1 = require("./models/configuration.model");
+const models_1 = require("./models");
 const errors_1 = require("./errors");
 class ScalaClient {
     /**
@@ -42,7 +39,7 @@ class ScalaClient {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const res = yield this.restClient.get('configurations');
-                const conf = new configuration_model_1.Configuration(new money_model_1.Money(res.data.minimumAmount.amount, res.data.minimumAmount.currency), new money_model_1.Money(res.data.maximumAmount.amount, res.data.maximumAmount.currency), parseInt(res.data.numberOfPayments));
+                const conf = new models_1.Configuration(new models_1.Money(res.data.minimumAmount.amount, res.data.minimumAmount.currency), new models_1.Money(res.data.maximumAmount.amount, res.data.maximumAmount.currency), parseInt(res.data.numberOfPayments));
                 return conf;
             }
             catch (err) {
@@ -64,7 +61,7 @@ class ScalaClient {
                         redirectCancelUrl: cancelUrl
                     } });
                 const res = yield this.restClient.post('orders', body);
-                const token = new order_token_model_1.OrderToken(res.data.token);
+                const token = new models_1.OrderToken(res.data.token);
                 if (res.data.expires) {
                     token.setExpires(res.data.expires);
                 }
@@ -111,11 +108,26 @@ class ScalaClient {
             try {
                 const body = Object.assign({}, refund);
                 const res = yield this.restClient.post(`payments/${token}/refund`, body);
-                const refundRes = new refund_response_model_1.RefundResponse(res.data.token, new money_model_1.Money(res.data.amount.amount), res.data.merchantReference, res.data.refundToken, res.data.refundedAt);
+                const refundRes = new models_1.RefundResponse(res.data.token, new models_1.Money(res.data.amount.amount), res.data.merchantReference, res.data.refundToken, res.data.refundedAt);
                 return refundRes;
             }
             catch (err) {
                 throw new errors_1.RefundError(err.message, err.response.data);
+            }
+        });
+    }
+    /**
+     * @param token string - The Scalapay order token
+     */
+    getOrder(token) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const res = yield this.restClient.get(`payments/${token}`);
+                const response = new models_1.OrderDetailResponse(res.data.token, new models_1.Money(res.data.totalAmount.amount, res.data.totalAmount.currency), res.data.status);
+                return response;
+            }
+            catch (err) {
+                throw new errors_1.ConfigurationError(err.message);
             }
         });
     }
