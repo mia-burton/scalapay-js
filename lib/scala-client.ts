@@ -1,11 +1,6 @@
 import { ClientInterface } from "./client.interface"
-import { OrderDetail } from "./models/order-detail.model"
 import axios, { AxiosInstance } from 'axios'
-import { OrderToken } from "./models/order-token.model"
-import { OrderRefund } from "./models/order-refund.model"
-import { RefundResponse } from "./models/refund-response.model"
-import { Money } from "./models/money.model"
-import { Configuration } from "./models/configuration.model"
+import { OrderDetailResponse, OrderDetail, OrderToken, OrderRefund, RefundResponse, Configuration, Money } from "./models"
 import { CaptureOrderError, ConfigurationError, CreateOrderError, RefundError } from "./errors"
 
 export class ScalaClient implements ClientInterface {
@@ -131,6 +126,23 @@ export class ScalaClient implements ClientInterface {
       return refundRes
     } catch(err) {
       throw new RefundError(err.message, err.response.data)
+    }
+  }
+
+  /**
+   * @param token string - The Scalapay order token
+   */
+  public async getOrder(token: string): Promise<OrderDetailResponse> {
+    try {
+      const res = await this.restClient.get(`payments/${token}`)
+      const response = new OrderDetailResponse(
+        res.data.token,
+        new Money(res.data.totalAmount.amount, res.data.totalAmount.currency),
+        res.data.status
+      )
+      return response
+    } catch (err) {
+      throw new ConfigurationError(err.message)
     }
   }
 
