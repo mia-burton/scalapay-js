@@ -1,9 +1,5 @@
 import { ClientInterface } from "./client.interface";
-import { OrderDetail } from "./models/order-detail.model";
-import { OrderToken } from "./models/order-token.model";
-import { OrderRefund } from "./models/order-refund.model";
-import { RefundResponse } from "./models/refund-response.model";
-import { Configuration } from "./models/configuration.model";
+import { OrderDetailResponse, OrderDetail, OrderToken, OrderRefund, RefundResponse, Configuration } from "./models";
 export declare class ScalaClient implements ClientInterface {
     private readonly PRODUCTION_URI;
     private readonly SANDBOX_URI;
@@ -48,5 +44,9 @@ export declare class ScalaClient implements ClientInterface {
      * @param refund OrderRefund - The order to refund data
      */
     refund(token: string, refund: OrderRefund): Promise<RefundResponse>;
+    /**
+     * @param token string - The Scalapay order token
+     */
+    getOrder(token: string): Promise<OrderDetailResponse>;
     private initAxios;
 }
