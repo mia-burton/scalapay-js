@@ -1,8 +1,7 @@
-import { Money } from "./money.model";
 export interface Payout {
     merchantPayoutToken: string;
     status: string;
-    totalAmount: Money;
+    totalAmount: Amount;
     transactionDate: string;
     items: PayoutDetail[];
 }
@@ -13,24 +12,28 @@ export interface PayoutDetail {
     product: string;
     merchantReference: string;
     captureStatus?: string;
-    captureAmount?: Money;
+    captureAmount?: Amount;
     transferId: string;
     transactionDate: string;
     details: Details;
     orderTokenLast4: string;
     orderCreatedDate?: string;
-    refundAmount?: Money;
+    refundAmount?: Amount;
     createdAt?: string;
 }
 interface Details {
     storeReference?: string | null;
     deviceReference?: string | null;
-    grossAmount: Money;
-    netAmount: Money;
-    totalFeeAmount: Money;
-    scalapayFeeAmount: Money;
-    scalapayFeeTaxAmount: Money;
-    otherFeeAmount: Money;
-    otherFeeTaxAmount: Money;
+    grossAmount: Amount;
+    netAmount: Amount;
+    totalFeeAmount: Amount;
+    scalapayFeeAmount: Amount;
+    scalapayFeeTaxAmount: Amount;
+    otherFeeAmount: Amount;
+    otherFeeTaxAmount: Amount;
+}
+interface Amount {
+    amount: string;
+    currency: string;
 }
 export {};
