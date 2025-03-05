@@ -1,5 +1,5 @@
 import { ClientInterface } from "./client.interface";
-import { OrderDetailResponse, OrderDetail, OrderToken, OrderRefund, RefundResponse, Configuration } from "./models";
+import { OrderDetailResponse, OrderDetail, OrderToken, OrderRefund, RefundResponse, Configuration, PayoutResponse } from "./models";
 export declare class ScalaClient implements ClientInterface {
     private readonly PRODUCTION_URI;
     private readonly SANDBOX_URI;
@@ -48,5 +48,15 @@ export declare class ScalaClient implements ClientInterface {
      * @param token string - The Scalapay order token
      */
     getOrder(token: string): Promise<OrderDetailResponse>;
+    /**
+     * Returns the list of payout for the given period.
+     * @param startDate Date - The initial date
+     * @param endDate Date - The end date
+     * @param page number- The page number
+     * @param pageSize number- The number of items to returns
+     * @returns PayoutResponse
+     */
+    payouts(startDate: Date, endDate: Date, page?: number, pageSize?: number): Promise<PayoutResponse>;
     private initAxios;
+    private formatDate;
 }

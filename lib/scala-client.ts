@@ -1,11 +1,12 @@
 import { ClientInterface } from "./client.interface"
 import axios, { AxiosInstance } from 'axios'
-import { OrderDetailResponse, OrderDetail, OrderToken, OrderRefund, RefundResponse, Configuration, Money } from "./models"
+import { OrderDetailResponse, OrderDetail, OrderToken, OrderRefund, RefundResponse, Configuration, Money, PayoutResponse } from "./models"
 import { CaptureOrderError, ConfigurationError, CreateOrderError, RefundError } from "./errors"
+import { PayoutMapper } from "./mappers"
 
 export class ScalaClient implements ClientInterface {
-  private readonly PRODUCTION_URI = 'https://api.scalapay.com/v2/'
-  private readonly SANDBOX_URI = 'https://integration.api.scalapay.com/v2/'
+  private readonly PRODUCTION_URI = 'https://api.scalapay.com/'
+  private readonly SANDBOX_URI = 'https://integration.api.scalapay.com/'
 
   private readonly apiKey: string
   private readonly expireIn: number
@@ -95,7 +96,7 @@ export class ScalaClient implements ClientInterface {
         token,
         merchantReference: reference
       }
-      const res = await this.restClient.post('payments/capture', body)
+      const res = await this.restClient.post('v2/payments/capture', body)
       return res.data.status
     } catch(err) {
       throw new CaptureOrderError(err.message, err.response.data)
@@ -113,7 +114,7 @@ export class ScalaClient implements ClientInterface {
       const body = {
         ...refund
       }
-      const res = await this.restClient.post(`payments/${token}/refund`, body)
+      const res = await this.restClient.post(`v2/payments/${token}/refund`, body)
       const refundRes: RefundResponse = new RefundResponse(
         res.data.token,
         new Money(
@@ -134,12 +135,45 @@ export class ScalaClient implements ClientInterface {
    */
   public async getOrder(token: string): Promise<OrderDetailResponse> {
     try {
-      const res = await this.restClient.get(`payments/${token}`)
+      const res = await this.restClient.get(`v2/payments/${token}`)
       const response = new OrderDetailResponse(
         res.data.token,
         new Money(res.data.totalAmount.amount, res.data.totalAmount.currency),
         res.data.status
       )
+      return response
+    } catch (err) {
+      throw new ConfigurationError(err.message)
+    }
+  }
+
+  /**
+   * Returns the list of payout for the given period.
+   * @param startDate Date - The initial date
+   * @param endDate Date - The end date
+   * @param page number- The page number
+   * @param pageSize number- The number of items to returns
+   * @returns PayoutResponse
+   */
+  public async payouts(startDate: Date, endDate: Date, page = 1, pageSize = 100): Promise<PayoutResponse> {
+    try {
+      const res = await this.restClient.get(`v1/reporting/payouts?startDate=${this.formatDate(startDate)}&endDate=${this.formatDate(endDate)}&page=${page - 1}&size=${pageSize}`)
+      const payouts = []
+      const payoutMapper = new PayoutMapper()
+      for (const element of res.data.items) {
+        const payoutItems = []
+        const resOrdersPayout = await this.restClient.get(`v1/reporting/payouts/${element.merchantPayoutToken}/orders`)
+        payoutItems.push(...resOrdersPayout.data.items)
+        const resRefundsPayout = await this.restClient.get(`v1/reporting/payouts/${element.merchantPayoutToken}/refunds`)
+        payoutItems.push(...resRefundsPayout.data.items)
+        payouts.push(payoutMapper.map(element, payoutItems))
+      }
+      const response = new PayoutResponse(
+        res.data.page,
+        res.data.total,
+        res.data.hasMore
+      )
+      response.items = payouts
       return response
     } catch (err) {
       throw new ConfigurationError(err.message)
@@ -155,5 +189,19 @@ export class ScalaClient implements ClientInterface {
         'Content-Type': 'application/json'
       }
     })
+  }
+
+  private formatDate(date: Date): string {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
   }
 }
