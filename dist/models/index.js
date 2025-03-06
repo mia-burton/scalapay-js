@@ -22,3 +22,8 @@ var refund_response_model_1 = require("./refund-response.model");
 Object.defineProperty(exports, "RefundResponse", { enumerable: true, get: function () { return refund_response_model_1.RefundResponse; } });
 var order_detail_response_model_1 = require("./order-detail-response.model");
 Object.defineProperty(exports, "OrderDetailResponse", { enumerable: true, get: function () { return order_detail_response_model_1.OrderDetailResponse; } });
+var payout_response_model_1 = require("./payout-response.model");
+Object.defineProperty(exports, "PayoutResponse", { enumerable: true, get: function () { return payout_response_model_1.PayoutResponse; } });
+Object.defineProperty(exports, "Payout", { enumerable: true, get: function () { return payout_response_model_1.Payout; } });
+Object.defineProperty(exports, "Transaction", { enumerable: true, get: function () { return payout_response_model_1.Transaction; } });
+Object.defineProperty(exports, "TransactionDetails", { enumerable: true, get: function () { return payout_response_model_1.TransactionDetails; } });

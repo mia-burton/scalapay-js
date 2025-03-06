@@ -9,3 +9,4 @@ export { OrderRefund } from './order-refund.model';
 export { OrderToken } from './order-token.model';
 export { RefundResponse } from './refund-response.model';
 export { OrderDetailResponse } from './order-detail-response.model';
+export { PayoutResponse, Payout, Transaction, TransactionDetails } from './payout-response.model';
