@@ -13,6 +13,7 @@ exports.ScalaClient = void 0;
 const axios_1 = require("axios");
 const models_1 = require("./models");
 const errors_1 = require("./errors");
+const mappers_1 = require("./mappers");
 class ScalaClient {
     /**
      * Create a ScalaPay client
@@ -23,8 +24,8 @@ class ScalaClient {
      * @param expireIn number - Number of seconds in wich complete payment
      */
     constructor(apiKey, sandbox = false, expireIn = 6000000) {
-        this.PRODUCTION_URI = 'https://api.scalapay.com/v2/';
-        this.SANDBOX_URI = 'https://integration.api.scalapay.com/v2/';
+        this.PRODUCTION_URI = 'https://api.scalapay.com/';
+        this.SANDBOX_URI = 'https://integration.api.scalapay.com/';
         this.apiKey = apiKey;
         this.expireIn = expireIn;
         this.sandbox = sandbox;
@@ -89,7 +90,7 @@ class ScalaClient {
                     token,
                     merchantReference: reference
                 };
-                const res = yield this.restClient.post('payments/capture', body);
+                const res = yield this.restClient.post('v2/payments/capture', body);
                 return res.data.status;
             }
             catch (err) {
@@ -107,7 +108,7 @@ class ScalaClient {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const body = Object.assign({}, refund);
-                const res = yield this.restClient.post(`payments/${token}/refund`, body);
+                const res = yield this.restClient.post(`v2/payments/${token}/refund`, body);
                 const refundRes = new models_1.RefundResponse(res.data.token, new models_1.Money(res.data.amount.amount), res.data.merchantReference, res.data.refundToken, res.data.refundedAt);
                 return refundRes;
             }
@@ -122,8 +123,39 @@ class ScalaClient {
     getOrder(token) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const res = yield this.restClient.get(`payments/${token}`);
+                const res = yield this.restClient.get(`v2/payments/${token}`);
                 const response = new models_1.OrderDetailResponse(res.data.token, new models_1.Money(res.data.totalAmount.amount, res.data.totalAmount.currency), res.data.status);
+                return response;
+            }
+            catch (err) {
+                throw new errors_1.ConfigurationError(err.message);
+            }
+        });
+    }
+    /**
+     * Returns the list of payout for the given period.
+     * @param startDate Date - The initial date
+     * @param endDate Date - The end date
+     * @param page number- The page number
+     * @param pageSize number- The number of items to returns
+     * @returns PayoutResponse
+     */
+    payouts(startDate, endDate, page = 1, pageSize = 100) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const res = yield this.restClient.get(`v1/reporting/payouts?startDate=${this.formatDate(startDate)}&endDate=${this.formatDate(endDate)}&page=${page - 1}&size=${pageSize}`);
+                const payouts = [];
+                const payoutMapper = new mappers_1.PayoutMapper();
+                for (const element of res.data.items) {
+                    const payoutItems = [];
+                    const resOrdersPayout = yield this.restClient.get(`v1/reporting/payouts/${element.merchantPayoutToken}/orders`);
+                    payoutItems.push(...resOrdersPayout.data.items);
+                    const resRefundsPayout = yield this.restClient.get(`v1/reporting/payouts/${element.merchantPayoutToken}/refunds`);
+                    payoutItems.push(...resRefundsPayout.data.items);
+                    payouts.push(payoutMapper.map(element, payoutItems));
+                }
+                const response = new models_1.PayoutResponse(res.data.page, res.data.total, res.data.hasMore);
+                response.items = payouts;
                 return response;
             }
             catch (err) {
@@ -140,6 +172,14 @@ class ScalaClient {
                 'Content-Type': 'application/json'
             }
         });
+    }
+    formatDate(date) {
+        var d = new Date(date), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+        return [year, month, day].join('-');
     }
 }
 exports.ScalaClient = ScalaClient;
